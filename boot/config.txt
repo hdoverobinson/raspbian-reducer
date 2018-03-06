@@ -1,0 +1,18 @@
+#enable PPS on GPIO 18
+dtoverlay=pps-gpio,gpiopin=18,assert_falling_edge
+
+#max cpu freq at all times
+force_turbo=1
+
+#set 16M GPU mem
+gpu_mem=16
+
+#disable splash
+disable_splash=1
+
+#disable interfaces
+enable_uart=0
+dtparam=i2c_arm=off
+dtparam=i2s=off
+dtparam=spi=off
+dtparam=audio=off

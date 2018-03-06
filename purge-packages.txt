@@ -1,0 +1,1 @@
+avahi-daemon dhcpcd5 raspberrypi-net-mods rsyslog triggerhappy
