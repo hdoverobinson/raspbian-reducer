@@ -26,6 +26,15 @@ fi &&
 
 echo "Starting raspbian-reducer!" &&
 
+echo "Enabling SSHD..." &&
+update-rc.d ssh defaults &&
+update-rc.d ssh enable &&
+
+echo "Restoring network interfaces..." &&
+cp "$INIT_DIR"/etc/network/interfaces /etc/network/ &&
+chown root:root /etc/network/interfaces &&
+chmod 644 /etc/network/interfaces &&
+
 echo "Restoring config.txt..." &&
 cp "$INIT_DIR"/boot/{cmdline.txt,config.txt} /boot/ &&
 chown root:root /boot/{cmdline.txt,config.txt} &&
