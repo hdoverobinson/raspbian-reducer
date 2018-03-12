@@ -30,6 +30,12 @@ echo "Enabling SSHD..." &&
 update-rc.d ssh defaults &&
 update-rc.d ssh enable &&
 
+echo "Disabling apt timers..." &&
+systemctl disable apt-daily.service &&
+systemctl disable apt-daily.timer &&
+systemctl disable apt-daily-upgrade.service &&
+systemctl disable apt-daily.timer &&
+
 echo "Restoring network interfaces..." &&
 cp "$INIT_DIR"/etc/network/interfaces /etc/network/ &&
 chown root:root /etc/network/interfaces &&
