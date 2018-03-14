@@ -44,7 +44,7 @@ echo "Disabling apt timers..." &&
 systemctl disable apt-daily.service &&
 systemctl disable apt-daily.timer &&
 systemctl disable apt-daily-upgrade.service &&
-systemctl disable apt-daily.timer &&
+systemctl disable apt-daily-upgrade.timer &&
 
 echo "Restoring network interfaces..." &&
 cp "${INIT_DIR}/${RPI_MODEL}"/etc/network/interfaces /etc/network/ &&
