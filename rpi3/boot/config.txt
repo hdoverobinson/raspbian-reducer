@@ -1,0 +1,16 @@
+#max cpu freq at all times
+force_turbo=1
+
+#set 16M GPU mem
+gpu_mem=16
+
+#disable boot splash
+disable_splash=1
+
+#interfaces
+enable_uart=1
+dtoverlay=pi3-miniuart-bt
+dtparam=i2c_arm=off
+dtparam=i2s=off
+dtparam=spi=off
+dtparam=audio=off

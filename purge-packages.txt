@@ -1,1 +1,2 @@
+#list of packages to be removed via apt-get purge --auto-remove
 avahi-daemon dhcpcd5 dphys-swapfile raspberrypi-net-mods rsyslog triggerhappy

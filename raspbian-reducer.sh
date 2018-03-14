@@ -24,6 +24,16 @@ exit 1
 fi
 fi &&
 
+GET_REVISION="$(cat /proc/cpuinfo | grep 'Revision' | awk '{print $3}')" &&
+RPI_MODEL="$(cat "$INIT_DIR/rpi-identifiers.txt" | tail -n+3 | grep "$GET_REVISION" | awk '{print $2}')" &&
+
+if [[ -z "$RPI_MODEL" ]]
+then
+echo "$(tput setaf 1 2> /dev/null)Could not identify Raspberry Pi model.$(tput sgr0)" &&
+echo "$(tput setaf 1 2> /dev/null)Aborting!$(tput sgr0)" &&
+exit 1
+fi &&
+
 echo "Starting raspbian-reducer!" &&
 
 echo "Enabling SSHD..." &&
@@ -37,27 +47,27 @@ systemctl disable apt-daily-upgrade.service &&
 systemctl disable apt-daily.timer &&
 
 echo "Restoring network interfaces..." &&
-cp "$INIT_DIR"/etc/network/interfaces /etc/network/ &&
+cp "${INIT_DIR}/${RPI_MODEL}"/etc/network/interfaces /etc/network/ &&
 chown root:root /etc/network/interfaces &&
 chmod 644 /etc/network/interfaces &&
 
 echo "Restoring config.txt..." &&
-cp "$INIT_DIR"/boot/{cmdline.txt,config.txt} /boot/ &&
+cp "${INIT_DIR}/${RPI_MODEL}"/boot/{cmdline.txt,config.txt} /boot/ &&
 chown root:root /boot/{cmdline.txt,config.txt} &&
 chmod 755 /boot/{cmdline.txt,config.txt} &&
 
 echo "Restoring raspbian-reducer_modprobe-blacklist.conf..." &&
-cp "$INIT_DIR"/etc/modprobe.d/raspbian-reducer_modprobe-blacklist.conf /etc/modprobe.d/ &&
+cp "${INIT_DIR}/${RPI_MODEL}"/etc/modprobe.d/raspbian-reducer_modprobe-blacklist.conf /etc/modprobe.d/ &&
 chown root:root /etc/modprobe.d/raspbian-reducer_modprobe-blacklist.conf &&
 chmod 644 /etc/modprobe.d/raspbian-reducer_modprobe-blacklist.conf &&
 
 echo "Restoring 90-raspbian-reducer_sysctl.conf..." &&
-cp "$INIT_DIR"/etc/sysctl.d/90-raspbian-reducer_sysctl.conf /etc/sysctl.d/ &&
+cp "${INIT_DIR}/${RPI_MODEL}"/etc/sysctl.d/90-raspbian-reducer_sysctl.conf /etc/sysctl.d/ &&
 chown root:root /etc/sysctl.d/90-raspbian-reducer_sysctl.conf &&
 chmod 744 /etc/sysctl.d/90-raspbian-reducer_sysctl.conf &&
 
 echo "Restoring raspbian-reducer_cron..." &&
-cp "$INIT_DIR"/etc/cron.d/raspbian-reducer_cron /etc/cron.d/ &&
+cp "${INIT_DIR}/${RPI_MODEL}"/etc/cron.d/raspbian-reducer_cron /etc/cron.d/ &&
 chown root:root /etc/cron.d/raspbian-reducer_cron &&
 chmod 755 /etc/cron.d/raspbian-reducer_cron &&
 
@@ -75,7 +85,7 @@ systemctl stop getty@tty1.service &&
 systemctl disable getty@tty1.service &&
 
 echo "Purging packages from $INIT_DIR/purge-packages.txt..." &&
-for i in $(cat "$INIT_DIR/purge-packages.txt")
+for i in $(cat "$INIT_DIR/purge-packages.txt" | head -2 | sed -n 2p)
 do
 if dpkg --get-selections | grep -q $i
 then

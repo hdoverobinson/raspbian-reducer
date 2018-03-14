@@ -1,15 +1,17 @@
-#max cpu freq at all times
-force_turbo=1
+#raspi-config "high" preset
+arm_freq=1000
+core_freq=500
+sdram_freq=500
+over_voltage=2
 
 #set 16M GPU mem
 gpu_mem=16
 
-#disable splash
+#disable boot splash
 disable_splash=1
 
 #interfaces
 enable_uart=1
-dtoverlay=pi3-miniuart-bt
 dtparam=i2c_arm=off
 dtparam=i2s=off
 dtparam=spi=off
