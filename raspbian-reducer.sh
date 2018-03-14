@@ -14,12 +14,12 @@ fi &&
 
 if ! [[ "$@" =~ .*-y.* ]]
 then
-echo "$(tput setaf 1 2> /dev/null)Before running, make sure you set an IP address in $INIT_DIR/etc/network/interfaces! Continue? (yes/no)$(tput sgr0)" &&
+echo "$(tput setaf 1 2> /dev/null)Before running, make sure you set an IP address in $INIT_DIR/etc/network/interfaces! Continue? (yes/no)$(tput sgr0 2> /dev/null)" &&
 read -r REPLY &&
 REPLY=${REPLY,,} &&
 if ! [[ $REPLY =~ ^(yes|y) ]]
 then
-echo "$(tput setaf 1 2> /dev/null)Aborting!$(tput sgr0)" &&
+echo "$(tput setaf 1 2> /dev/null)Aborting!$(tput sgr0 2> /dev/null)" &&
 exit 1
 fi
 fi &&
@@ -29,22 +29,12 @@ RPI_MODEL="$(cat "$INIT_DIR/rpi-identifiers.txt" | tail -n+3 | grep "$GET_REVISI
 
 if [[ -z "$RPI_MODEL" ]]
 then
-echo "$(tput setaf 1 2> /dev/null)Could not identify Raspberry Pi model.$(tput sgr0)" &&
-echo "$(tput setaf 1 2> /dev/null)Aborting!$(tput sgr0)" &&
+echo "$(tput setaf 1 2> /dev/null)Could not identify Raspberry Pi model.
+Aborting!$(tput sgr0 2> /dev/null)" &&
 exit 1
 fi &&
 
 echo "Starting raspbian-reducer!" &&
-
-echo "Enabling SSHD..." &&
-update-rc.d ssh defaults &&
-update-rc.d ssh enable &&
-
-echo "Disabling apt timers..." &&
-systemctl disable apt-daily.service &&
-systemctl disable apt-daily.timer &&
-systemctl disable apt-daily-upgrade.service &&
-systemctl disable apt-daily-upgrade.timer &&
 
 echo "Restoring network interfaces..." &&
 cp "${INIT_DIR}/${RPI_MODEL}"/etc/network/interfaces /etc/network/ &&
@@ -74,15 +64,25 @@ chmod 755 /etc/cron.d/raspbian-reducer_cron &&
 echo "Removing errant cron jobs..." &&
 find /etc/cron* -type f ! -name ntp -a -type f ! -name fake-hwclock -a -type f ! -name crontab -type f ! -name raspbian-reducer_cron -delete &&
 
-echo "Setting CPU to performance mode..." &&
-echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor &&
+echo "Disabling apt timers..." &&
+systemctl disable apt-daily.service &&
+systemctl disable apt-daily.timer &&
+systemctl disable apt-daily-upgrade.service &&
+systemctl disable apt-daily-upgrade.timer &&
 
 echo "Disabling HDMI..." &&
-tvservice -o &&
+tvservice -o > /dev/null 2>&1 &&
 
-echo "Stopping tty1..." &&
+echo "Disabling tty1..." &&
 systemctl stop getty@tty1.service &&
 systemctl disable getty@tty1.service &&
+
+echo "Enabling SSHD..." &&
+update-rc.d ssh defaults &&
+update-rc.d ssh enable &&
+
+echo "Setting CPU to performance mode..." &&
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor &&
 
 echo "Purging packages from $INIT_DIR/purge-packages.txt..." &&
 for i in $(cat "$INIT_DIR/purge-packages.txt" | head -2 | sed -n 2p)
