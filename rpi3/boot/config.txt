@@ -1,6 +1,3 @@
-dtoverlay=pps-gpio,gpiopin=18,capture_clear
-dtoverlay=i2c-rtc,ds3231
-
 #max cpu freq at all times
 force_turbo=1
 
