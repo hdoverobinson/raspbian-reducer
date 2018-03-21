@@ -1,3 +1,6 @@
+dtoverlay=pps-gpio,gpiopin=18,capture_clear
+dtoverlay=i2c-rtc,ds3231
+
 #max cpu freq at all times
 force_turbo=1
 
@@ -10,7 +13,7 @@ disable_splash=1
 #interfaces
 enable_uart=1
 dtoverlay=pi3-miniuart-bt
-dtparam=i2c_arm=off
+dtparam=i2c_arm=on
 dtparam=i2s=off
 dtparam=spi=off
 dtparam=audio=off

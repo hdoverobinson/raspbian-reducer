@@ -6,6 +6,7 @@
 #https://github.com/hdoverobinson
 
 export INIT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export SCRIPT_PATH="$INIT_DIR/raspbian-reducer.sh"
 
 if [ "$EUID" -ne 0 ]
 then echo "This script must be run as root!"
@@ -57,12 +58,12 @@ chown root:root /etc/sysctl.d/90-raspbian-reducer_sysctl.conf &&
 chmod 744 /etc/sysctl.d/90-raspbian-reducer_sysctl.conf &&
 
 echo "Restoring raspbian-reducer_cron..." &&
-cp "${INIT_DIR}/${RPI_MODEL}"/etc/cron.d/raspbian-reducer_cron /etc/cron.d/ &&
+cat "${INIT_DIR}/${RPI_MODEL}"/etc/cron.d/raspbian-reducer_cron | sed "s@SCRIPT_PATH@$SCRIPT_PATH@g" > /etc/cron.d/raspbian-reducer_cron &&
 chown root:root /etc/cron.d/raspbian-reducer_cron &&
 chmod 755 /etc/cron.d/raspbian-reducer_cron &&
 
 echo "Removing errant cron jobs..." &&
-find /etc/cron* -type f ! -name ntp -a -type f ! -name fake-hwclock -a -type f ! -name crontab -type f ! -name raspbian-reducer_cron -delete &&
+find /etc/cron* -type f ! -name fake-hwclock -a -type f ! -name crontab -type f ! -name raspbian-reducer_cron -delete &&
 
 echo "Disabling apt timers..." &&
 systemctl disable apt-daily.service &&
