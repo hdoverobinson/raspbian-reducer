@@ -10,7 +10,7 @@ disable_splash=1
 #interfaces
 enable_uart=1
 dtoverlay=pi3-miniuart-bt
-dtparam=i2c_arm=on
+dtparam=i2c_arm=off
 dtparam=i2s=off
 dtparam=spi=off
 dtparam=audio=off
