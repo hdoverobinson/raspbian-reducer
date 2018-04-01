@@ -6,7 +6,7 @@
 #https://github.com/hdoverobinson
 
 export INIT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export SCRIPT_PATH="$INIT_DIR/raspbian-reducer.sh"
+export SCRIPT_PATH="$(realpath "$0")"
 
 if [ "$EUID" -ne 0 ]
 then echo "This script must be run as root!"
@@ -35,43 +35,44 @@ Aborting!$(tput sgr0 2> /dev/null)" &&
 exit 1
 fi &&
 
-echo "Starting raspbian-reducer!" &&
+echo "Starting $(basename "$0")!" &&
 
 echo "Restoring network interfaces..." &&
 cp "${INIT_DIR}/${RPI_MODEL}"/etc/network/interfaces /etc/network/ &&
 chown root:root /etc/network/interfaces &&
 chmod 644 /etc/network/interfaces &&
 
-echo "Restoring config.txt..." &&
+echo "Restoring cmdline.txt and config.txt..." &&
 cp "${INIT_DIR}/${RPI_MODEL}"/boot/{cmdline.txt,config.txt} /boot/ &&
 chown root:root /boot/{cmdline.txt,config.txt} &&
 chmod 755 /boot/{cmdline.txt,config.txt} &&
 
-echo "Restoring raspbian-reducer_modprobe-blacklist.conf..." &&
+echo "Restoring radio blacklist raspbian-reducer_modprobe-blacklist.conf..." &&
 cp "${INIT_DIR}/${RPI_MODEL}"/etc/modprobe.d/raspbian-reducer_modprobe-blacklist.conf /etc/modprobe.d/ &&
 chown root:root /etc/modprobe.d/raspbian-reducer_modprobe-blacklist.conf &&
 chmod 644 /etc/modprobe.d/raspbian-reducer_modprobe-blacklist.conf &&
+systemctl disable hciuart.service &&
 
 echo "Restoring 90-raspbian-reducer_sysctl.conf..." &&
 cp "${INIT_DIR}/${RPI_MODEL}"/etc/sysctl.d/90-raspbian-reducer_sysctl.conf /etc/sysctl.d/ &&
 chown root:root /etc/sysctl.d/90-raspbian-reducer_sysctl.conf &&
 chmod 744 /etc/sysctl.d/90-raspbian-reducer_sysctl.conf &&
 
-echo "Restoring raspbian-reducer_cron..." &&
-cat "${INIT_DIR}/${RPI_MODEL}"/etc/cron.d/raspbian-reducer_cron | sed "s@SCRIPT_PATH@$SCRIPT_PATH@g" > /etc/cron.d/raspbian-reducer_cron &&
-chown root:root /etc/cron.d/raspbian-reducer_cron &&
-chmod 755 /etc/cron.d/raspbian-reducer_cron &&
+echo "Restoring rc.local..." &&
+cat "${INIT_DIR}/${RPI_MODEL}"/etc/rc.local | sed "s@SCRIPT_PATH@$SCRIPT_PATH@g" > /etc/rc.local &&
+chown root:root /etc/rc.local &&
+chmod 755 /etc/rc.local &&
 
-echo "Removing errant cron jobs..." &&
-find /etc/cron* -type f ! -name fake-hwclock -a -type f ! -name crontab -type f ! -name raspbian-reducer_cron -delete &&
+TIMERS="apt-daily.service apt-daily.timer apt-daily-upgrade.service apt-daily-upgrade.timer cron.service systemd-tmpfiles-clean.timer timers.target" &&
+echo "Disabling systemd services: $TIMERS..." &&
+for i in $TIMERS
+do
+systemctl stop $i &&
+systemctl disable $i
+done &&
 
-echo "Disabling apt timers..." &&
-systemctl disable apt-daily.service &&
-systemctl disable apt-daily.timer &&
-systemctl disable apt-daily-upgrade.service &&
-systemctl disable apt-daily-upgrade.timer &&
-
-echo "Disabling HDMI..." &&
+echo "Disabling video output..." &&
+vcgencmd display_power 0 > /dev/null 2>&1 &&
 tvservice -o > /dev/null 2>&1 &&
 
 echo "Disabling tty1..." &&
@@ -93,6 +94,8 @@ then
 apt-get purge --auto-remove -qq $i
 fi
 done &&
+
+systemctl daemon-reload &&
 
 echo "Done! If running script for the first time, please reboot!" &&
 

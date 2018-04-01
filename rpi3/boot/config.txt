@@ -1,4 +1,5 @@
-#max cpu freq at all times
+#max stock cpu freq
+initial_turbo=60
 force_turbo=1
 
 #set 16M GPU mem
@@ -7,11 +8,24 @@ gpu_mem=16
 #disable boot splash
 disable_splash=1
 
-#interfaces
+#enable full speed UART
 enable_uart=1
 dtoverlay=pi3-miniuart-bt
+
+#disable i2c
 dtparam=i2c_arm=off
+
+#disable i2s
 dtparam=i2s=off
+
+#disable spi
 dtparam=spi=off
+
+#disable audio output
 dtparam=audio=off
+
+#disable HDMI output from boot
+hdmi_blanking=2
+
+#allow max USB current
 max_usb_current=1

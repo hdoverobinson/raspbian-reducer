@@ -1,2 +1,0 @@
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-@reboot root /bin/bash -c 'SCRIPT_PATH -y > /var/log/raspbian-reducer.log 2>&1'
