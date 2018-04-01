@@ -1,1 +1,1 @@
-dwc_otg.lpm_enable=0 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait isolcpus=1,2,3 nohz_full=1,2,3 rcu_nobs=1,2,3 nowatchdog oops=panic panic=30
+dwc_otg.lpm_enable=0 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait nowatchdog oops=panic panic=30
