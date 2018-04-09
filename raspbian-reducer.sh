@@ -63,13 +63,17 @@ cat "${INIT_DIR}/${RPI_MODEL}"/etc/rc.local | sed "s@SCRIPT_PATH@$SCRIPT_PATH@g"
 chown root:root /etc/rc.local &&
 chmod 755 /etc/rc.local &&
 
-TIMERS="apt-daily.service apt-daily.timer apt-daily-upgrade.service apt-daily-upgrade.timer cron.service systemd-tmpfiles-clean.timer timers.target" &&
+TIMERS="apt-daily.service apt-daily.timer apt-daily-upgrade.service apt-daily-upgrade.timer systemd-tmpfiles-clean.timer timers.target" &&
 echo "Disabling systemd services: $TIMERS..." &&
 for i in $TIMERS
 do
 systemctl stop $i &&
 systemctl disable $i
 done &&
+
+echo "Disabling cron..." &&
+update-rc.d cron defaults &&
+update-rc.d cron disable &&
 
 echo "Disabling video output..." &&
 vcgencmd display_power 0 > /dev/null 2>&1 &&

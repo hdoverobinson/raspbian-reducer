@@ -1,4 +1,4 @@
-#max stock cpu freq
+#max cpu freq at all times
 initial_turbo=60
 force_turbo=1
 
@@ -27,5 +27,5 @@ dtparam=audio=off
 #disable HDMI output from boot
 hdmi_blanking=2
 
-#allow max USB current
-max_usb_current=1
+#disable max USB current
+max_usb_current=0
