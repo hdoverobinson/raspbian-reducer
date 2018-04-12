@@ -10,10 +10,23 @@ gpu_mem=16
 #disable boot splash
 disable_splash=1
 
-#interfaces
-enable_uart=1
+#disable uart
+enable_uart=0
+
+#disable i2c
 dtparam=i2c_arm=off
+
+#disable i2s
 dtparam=i2s=off
+
+#disable spi
 dtparam=spi=off
+
+#disable audio output	
 dtparam=audio=off
-max_usb_current=1
+
+#disable HDMI output from boot
+hdmi_blanking=2
+
+#disable max USB current
+max_usb_current=0
