@@ -63,25 +63,9 @@ cat "${INIT_DIR}/${RPI_MODEL}"/etc/rc.local | sed "s@SCRIPT_PATH@$SCRIPT_PATH@g"
 chown root:root /etc/rc.local &&
 chmod 755 /etc/rc.local &&
 
-TIMERS="apt-daily.service apt-daily.timer apt-daily-upgrade.service apt-daily-upgrade.timer systemd-tmpfiles-clean.timer timers.target" &&
-echo "Disabling systemd services: $TIMERS..." &&
-for i in $TIMERS
-do
-systemctl stop $i &&
-systemctl disable $i
-done &&
-
-echo "Disabling cron..." &&
-update-rc.d cron defaults &&
-update-rc.d cron disable &&
-
 echo "Disabling video output..." &&
 vcgencmd display_power 0 > /dev/null 2>&1 &&
 tvservice -o > /dev/null 2>&1 &&
-
-echo "Disabling tty1..." &&
-systemctl stop getty@tty1.service &&
-systemctl disable getty@tty1.service &&
 
 echo "Enabling SSHD..." &&
 update-rc.d ssh defaults &&
@@ -90,8 +74,15 @@ update-rc.d ssh enable &&
 echo "Setting CPU to performance mode..." &&
 echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor &&
 
-echo "Purging packages from $INIT_DIR/purge-packages.txt..." &&
-for i in $(cat "$INIT_DIR/purge-packages.txt" | head -2 | sed -n 2p)
+echo "Disabling services from $INIT_DIR/services-disabled.txt..." &&
+for i in $(cat "$INIT_DIR/services-disabled.txt" | head -2 | sed -n 2p)
+do
+systemctl stop $i &&
+systemctl disable $i
+done &&
+
+echo "Purging packages from $INIT_DIR/packages-purged.txt..." &&
+for i in $(cat "$INIT_DIR/packages-purged.txt" | head -2 | sed -n 2p)
 do
 if dpkg --get-selections | grep -q $i
 then

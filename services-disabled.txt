@@ -1,0 +1,2 @@
+#list of services to be disabled via systemctl disable
+apt-daily.service apt-daily.timer apt-daily-upgrade.service apt-daily-upgrade.timer cron.service getty@tty1.service systemd-tmpfiles-clean.timer timers.target
