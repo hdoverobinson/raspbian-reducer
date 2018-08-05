@@ -26,7 +26,7 @@ fi
 fi &&
 
 GET_REVISION="$(cat /proc/cpuinfo | grep 'Revision' | awk '{print $3}')" &&
-RPI_MODEL="$(cat "$INIT_DIR/rpi-identifiers.txt" | tail -n+3 | grep "$GET_REVISION" | awk '{print $2}')" &&
+RPI_MODEL="$(cat "$INIT_DIR/rpi-identifiers.txt" | tail -n+3 | grep "$GET_REVISION" | head -1 | awk '{print $2}')" &&
 
 if [[ -z "$RPI_MODEL" ]]
 then
