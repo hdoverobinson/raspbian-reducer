@@ -1,6 +1,6 @@
 #!/bin/bash
 ###AUTHOR###
-#Harry Dove-Robinson 2018-03-05
+#Harry Dove-Robinson 2018-08-26
 #harry@doverobinson.me
 #https://gist.github.com/hdoverobinson
 #https://github.com/hdoverobinson
