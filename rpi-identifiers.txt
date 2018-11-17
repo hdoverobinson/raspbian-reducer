@@ -14,5 +14,6 @@ a02082		rpi3
 a22082		rpi3
 a32082		rpi3
 
-a020d3		rpi3
-2a020d3		rpi3
+a020d3    rpi3
+2a020d3   rpi3
+
