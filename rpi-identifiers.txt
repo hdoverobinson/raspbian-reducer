@@ -1,18 +1,18 @@
 #https://elinux.org/RPi_HardwareHistory#Board_Revision_History
-revision	model
+revision    model
 900092    rpi0
 900093    rpi0
 920093    rpi0
 9000c1    rpi0
 
 a01040    rpi2
-a01041		rpi2
-a21041		rpi2
-a22042		rpi2
+a01041    rpi2
+a21041    rpi2
+a22042    rpi2
 
-a02082		rpi3
-a22082		rpi3
-a32082		rpi3
+a02082    rpi3
+a22082    rpi3
+a32082    rpi3
 
 a020d3    rpi3
 2a020d3   rpi3
