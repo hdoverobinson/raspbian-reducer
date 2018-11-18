@@ -1,5 +1,5 @@
 #https://elinux.org/RPi_HardwareHistory#Board_Revision_History
-revision    model
+revision  model
 900092    rpi0
 900093    rpi0
 920093    rpi0
