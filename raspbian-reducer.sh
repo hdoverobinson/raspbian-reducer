@@ -47,6 +47,11 @@ cp "${INIT_DIR}/${RPI_MODEL}"/boot/{cmdline.txt,config.txt} /boot/ &&
 chown root:root /boot/{cmdline.txt,config.txt} &&
 chmod 755 /boot/{cmdline.txt,config.txt} &&
 
+echo "Restoring fstab..." &&
+cp "${INIT_DIR}/${RPI_MODEL}"/etc/fstab /etc/fstab &&
+chown root:root /etc/fstab &&
+chmod 644 /etc/fstab &&
+
 echo "Restoring radio blacklist raspbian-reducer_modprobe-blacklist.conf..." &&
 cp "${INIT_DIR}/${RPI_MODEL}"/etc/modprobe.d/raspbian-reducer_modprobe-blacklist.conf /etc/modprobe.d/ &&
 chown root:root /etc/modprobe.d/raspbian-reducer_modprobe-blacklist.conf &&
