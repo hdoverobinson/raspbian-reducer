@@ -29,3 +29,6 @@ hdmi_blanking=2
 
 #disable max USB current
 max_usb_current=0
+
+#disable camera port
+start_x=0
